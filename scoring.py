@@ -13,8 +13,8 @@ logging.basicConfig(level=logging.INFO, format=FORMAT)
 with open("config.json", "r") as f:
     config = json.load(f)
 
-TEST_DATA = os.path.join(config["test_data_path"])
-MODELS = os.path.join(config["output_model_path"])
+TEST_DATA_PATH = os.path.join(config["test_data_path"])
+OUTPUT_MODEL_PATH = os.path.join(config["output_model_path"])
 
 
 def score_model():
@@ -30,14 +30,14 @@ def score_model():
         None
     """
 
-    testdata = pd.read_csv(TEST_DATA + "/testdata.csv")
+    testdata = pd.read_csv(TEST_DATA_PATH + "/testdata.csv")
 
-    with open(MODELS + "/VERSION", "r", encoding="utf-8") as file:
+    with open(OUTPUT_MODEL_PATH + "/VERSION", "r", encoding="utf-8") as file:
         _version = file.read()
 
     logging.info("Using a model version: %s", _version)
 
-    with open(MODELS + "/model-" + _version + ".pkl", "rb") as file:
+    with open(OUTPUT_MODEL_PATH + "/model-" + _version + ".pkl", "rb") as file:
         model = joblib.load(file)
 
     X = testdata[["lastmonth_activity", "lastyear_activity", "number_of_employees"]]
@@ -47,7 +47,7 @@ def score_model():
     score = metrics.f1_score(y, y_preds)
 
     logging.info("Model scoring: %s", score)
-    with open(MODELS + "/latestscore.txt", "w", encoding="utf-8") as file:
+    with open(OUTPUT_MODEL_PATH + "/latestscore.txt", "w", encoding="utf-8") as file:
         file.write(str(score))
 
 
