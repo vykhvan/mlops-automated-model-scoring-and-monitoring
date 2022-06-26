@@ -13,8 +13,8 @@ logging.basicConfig(level=logging.INFO, format=FORMAT)
 with open(file="config.json", mode="r", encoding="utf-8") as f:
     config = json.load(f)
 
-SOURCE = config["input_folder_path"]
-SINK = config["output_folder_path"]
+INPUT_FOLDER_PATH = config["input_folder_path"]
+OUTPUT_FOLDER_PATH = config["output_folder_path"]
 
 
 def merge_multiple_dataframe():
@@ -37,14 +37,14 @@ def merge_multiple_dataframe():
 
     finaldata = pd.DataFrame(schema)
 
-    source_path = os.path.join(os.getcwd(), SOURCE)
+    source_path = os.path.join(os.getcwd(), INPUT_FOLDER_PATH)
     source_list = os.listdir(source_path)
 
     for source_file in source_list:
         dataframe = pd.read_csv(os.path.join(source_path, source_file))
         finaldata = pd.concat([finaldata, dataframe])
 
-        ingested_log = SINK + "/ingestedfiles.txt"
+        ingested_log = OUTPUT_FOLDER_PATH + "/ingestedfiles.txt"
         ingesttime = str(datetime.now())
         row = [ingesttime, source_path, source_file, len(dataframe)]
         logging.info("Data Ingest: %s", row)
@@ -54,7 +54,7 @@ def merge_multiple_dataframe():
 
     finaldata.drop_duplicates(inplace=True)
 
-    sink_path = os.path.join(SINK, "finaldata.csv")
+    sink_path = os.path.join(OUTPUT_FOLDER_PATH, "finaldata.csv")
     finaldata.to_csv(sink_path, index=False)
 
 
