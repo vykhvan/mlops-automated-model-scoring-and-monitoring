@@ -13,14 +13,14 @@ logging.basicConfig(level=logging.INFO, format=FORMAT)
 with open("config.json", "r", encoding="utf-8") as f:
     config = json.load(f)
 
-SOURCE = os.path.join(config["output_folder_path"])
-MODELS = os.path.join(config["output_model_path"])
+OUTPUT_FOLDER_PATH = os.path.join(config["output_folder_path"])
+OUTPUT_MODEL_PATH = os.path.join(config["output_model_path"])
 
 
 def train_model():
     """Train new model version"""
 
-    traindata = pd.read_csv(SOURCE + "/finaldata.csv")
+    traindata = pd.read_csv(OUTPUT_FOLDER_PATH + "/finaldata.csv")
     X = traindata[["lastmonth_activity", "lastyear_activity", "number_of_employees"]]
     y = traindata["exited"]
 
@@ -44,16 +44,16 @@ def train_model():
 
     model.fit(X, y)
 
-    with open(MODELS + "/VERSION", "r", encoding="utf-8") as file:
+    with open(OUTPUT_MODEL_PATH + "/VERSION", "r", encoding="utf-8") as file:
         _version = int(file.read())
     _version += 1
 
-    model_path = MODELS + "/model-" + str(_version) + ".pkl"
+    model_path = OUTPUT_MODEL_PATH + "/model-" + str(_version) + ".pkl"
     joblib.dump(model, model_path)
 
     logging.info("New version of the model has been trained: %s", _version)
 
-    with open(MODELS + "/VERSION", "w", encoding="utf-8") as file:
+    with open(OUTPUT_MODEL_PATH + "/VERSION", "w", encoding="utf-8") as file:
         file.write(str(_version))
 
 
