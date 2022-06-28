@@ -12,7 +12,7 @@ with open("config.json", "r", encoding="utf-8") as file:
 OUTPUT_FOLDER_PATH = config["output_folder_path"]
 OUTPUT_MODEL_PATH = config["output_model_path"]
 PROD_DEPLOYMENT_PATH = config["prod_deployment_path"]
-
+MODEL_VERSION_PATH = OUTPUT_MODEL_PATH + "/VERSION"
 
 def store_model_into_pickle():
     """
@@ -25,7 +25,8 @@ def store_model_into_pickle():
     Returns:
         None
     """
-    with open(OUTPUT_MODEL_PATH + "/VERSION", "r", encoding="utf-8") as textfile:
+    
+    with open(MODEL_VERSION_PATH, "r", encoding="utf-8") as textfile:
         _version = textfile.read()
 
     model_path = os.path.join(OUTPUT_MODEL_PATH, "model-" + _version + ".pkl")
@@ -34,6 +35,7 @@ def store_model_into_pickle():
     os.system(f"cp {model_path} {PROD_DEPLOYMENT_PATH}")
     os.system(f"cp {score_path} {PROD_DEPLOYMENT_PATH}")
     os.system(f"cp {ingest_path} {PROD_DEPLOYMENT_PATH}")
+    os.system(f"cp {MODEL_VERSION_PATH} {PROD_DEPLOYMENT_PATH}")
     logging.info("Deploying model version: %s", _version)
 
 
