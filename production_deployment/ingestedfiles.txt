@@ -1,0 +1,2 @@
+2022-06-26 14:44:47.857407,/home/studio-lab-user/mlops-automated-model-scoring-and-monitoring/practicedata,dataset1.csv,17
+2022-06-26 14:44:47.859663,/home/studio-lab-user/mlops-automated-model-scoring-and-monitoring/practicedata,dataset2.csv,19
