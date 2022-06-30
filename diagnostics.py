@@ -20,7 +20,7 @@ def dataframe_summary():
         None.
 
     Returns:
-        None.
+        summary_statistics: base statistics.
     """
     traindata = pd.read_csv(OUTPUT_FOLDER_PATH + "/finaldata.csv")
     columns = ["lastmonth_activity", "lastyear_activity", "number_of_employees"]
@@ -35,5 +35,24 @@ def dataframe_summary():
     return summary_statistics
 
 
+def data_integrity_check():
+    """Check data integrity for training data.
+
+    Args:
+        None.
+
+    Returns:
+        integiry: na values statistics.
+    """
+    traindata = pd.read_csv(OUTPUT_FOLDER_PATH + "/finaldata.csv")
+    nas = list(traindata.isna().sum())
+    napercents = [nas[i] / len(traindata.index) for i in range(len(nas))]
+    integrity = {}
+    for i in range(len(napercents)):
+        integrity.update({traindata.columns[i]: napercents[i]})
+    return integrity
+
+
 if __name__ == "__main__":
     print(dataframe_summary())
+    print(data_integrity_check())
