@@ -3,6 +3,7 @@ import os
 import subprocess
 import timeit
 
+import joblib
 import numpy as np
 import pandas as pd
 
@@ -86,8 +87,33 @@ def outdated_packages_list():
     return installed.decode("utf-8")
 
 
+def model_predictions(input_data):
+    """Load last model version and create inference.
+
+    Args:
+        input_data: pandas.DataFrame with features.
+
+    Returns:
+        predictions: pandas.DataFrame with model inference.
+    """
+
+    with open(MODEL_VERSION_PATH, "r", encoding="utf-8") as textfile:
+        _version = textfile.read()
+
+    with open(PROD_DEPLOYMENT_PATH + "/model-" + _version + ".pkl", "rb") as file:
+        model = joblib.load(file)
+
+    input_data = input_data[
+        ["lastmonth_activity", "lastyear_activity", "number_of_employees"]
+    ]
+    predictions = model.predict(input_data)
+
+    return {"predictions": list(predictions)}
+
+
 if __name__ == "__main__":
     print(dataframe_summary())
     print(data_integrity_check())
     print(execution_time())
     print(outdated_packages_list())
+    print(model_predictions(pd.read_csv(TEST_DATA_PATH)))
