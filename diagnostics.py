@@ -1,5 +1,7 @@
 import json
 import os
+import subprocess
+import timeit
 
 import numpy as np
 import pandas as pd
@@ -53,6 +55,39 @@ def data_integrity_check():
     return integrity
 
 
+def execution_time():
+    """Calculate timing of training and ingestion.
+
+    Args:
+        None.
+
+    Returns:
+        exec_timing: timing of execution"""
+    exec_timing = {}
+    for step in ["ingestion.py", "training.py"]:
+        starttime = timeit.default_timer()
+        os.system(f"python {step}")
+        timing = timeit.default_timer() - starttime
+        exec_timing.update({step: timing})
+    return exec_timing
+
+
+def outdated_packages_list():
+    """Return outdated packages.
+
+    Args:
+        None.
+
+    Returns:
+        installed: outdated packages list.
+
+    """
+    installed = subprocess.check_output(["pip", "list", "--outdated"])
+    return installed.decode("utf-8")
+
+
 if __name__ == "__main__":
     print(dataframe_summary())
     print(data_integrity_check())
+    print(execution_time())
+    print(outdated_packages_list())
