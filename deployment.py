@@ -1,7 +1,7 @@
 """Model Deployment"""
+import json
 import logging
 import os
-import json
 
 FORMAT = "%(asctime)-15s - %(levelname)s - %(message)s"
 logging.basicConfig(level=logging.INFO, format=FORMAT)
@@ -14,6 +14,7 @@ OUTPUT_MODEL_PATH = config["output_model_path"]
 PROD_DEPLOYMENT_PATH = config["prod_deployment_path"]
 MODEL_VERSION_PATH = OUTPUT_MODEL_PATH + "/VERSION"
 
+
 def store_model_into_pickle():
     """
     Copy the latest model version, the latestscore.txt value,
@@ -25,7 +26,7 @@ def store_model_into_pickle():
     Returns:
         None
     """
-    
+
     with open(MODEL_VERSION_PATH, "r", encoding="utf-8") as textfile:
         _version = textfile.read()
 
